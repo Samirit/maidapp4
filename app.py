@@ -12,7 +12,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.chains.question_answering import load_qa_chain
 
 # Directory path
-directory = 'C:\\Users\\Samirit Saha\\OneDrive\\Desktop\\datatset'
+directory = 'datatset'
 
 # Function to load the text documents
 def load_docs(directory):
