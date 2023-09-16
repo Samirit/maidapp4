@@ -1,18 +1,18 @@
 from flask import Flask, render_template, request
+import os  # Import the 'os' module
 
-app = Flask(__name__,)
+app = Flask(__name__)
 
-# Import necessary libraries and modules (keep your existing code here)
+# Import necessary libraries and modules
 from langchain.document_loaders import DirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import SentenceTransformerEmbeddings
 from langchain.vectorstores import Chroma
-import os
 from langchain.chat_models import ChatOpenAI
 from langchain.chains.question_answering import load_qa_chain
 
 # Directory path
-directory = 'datatset'
+directory = 'C:\\Users\\Samirit Saha\\OneDrive\\Desktop\\datatset'
 
 # Function to load the text documents
 def load_docs(directory):
@@ -37,13 +37,12 @@ embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
 # Use Chroma as a vector store and store the documents in it
 db = Chroma.from_documents(docs, embeddings)
 
-# Insert your OpenAI API key below
-import os
-os.environ["OPENAI_API_KEY"] = "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"
+# Access the OpenAI API key from the environment variable
+openai_api_key = os.environ.get("OPENAI_API_KEY")  # Retrieve the API key
 
 # Load the Language Model (LLM)
 model_name = "gpt-3.5-turbo"
-llm = ChatOpenAI(model_name=model_name)
+llm = ChatOpenAI(model_name=model_name, api_key=openai_api_key)  # Pass the API key to the model
 
 # Load the Q&A chain to get answers to queries
 chain = load_qa_chain(llm, chain_type="stuff", verbose=True)
@@ -54,8 +53,6 @@ def index():
     return render_template('index.html')
 
 # Define the route for handling user queries
-# Define the route for handling user queries
-# In your app.py
 @app.route('/query', methods=['POST'])
 def query():
     user_query = request.form.get('query')
@@ -93,7 +90,6 @@ def process_answer(answer):
     processed_answer = '<br>'.join(processed_lines)
     
     return processed_answer
-
 
 if __name__ == '__main__':
     app.run(debug=True)
